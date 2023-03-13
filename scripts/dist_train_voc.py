@@ -311,7 +311,7 @@ def train(cfg):
         aff_cam_l = F.interpolate(aff_cam_l, size=pseudo_label.shape[1:], mode='bilinear', align_corners=False)
         aff_cam_h = propagte_aff_cam_with_bkg(valid_cam_resized, aff=aff_mat.detach().clone(), mask=attn_mask_infer, cls_labels=cls_labels, bkg_score=cfg.cam.high_thre)
         aff_cam_h = F.interpolate(aff_cam_h, size=pseudo_label.shape[1:], mode='bilinear', align_corners=False)
-
+        
         
         bkg_cls = bkg_cls.to(cams.device)
         _cls_labels = torch.cat((bkg_cls, cls_labels), dim=1)
@@ -328,7 +328,7 @@ def train(cfg):
         refined_aff_label[(refined_aff_label_h + refined_aff_label_l) == 0] = 0
         refined_aff_label = ignore_img_box(refined_aff_label, img_box=img_box, ignore_index=cfg.dataset.ignore_index)
         ######################
-
+        
         refined_pseudo_label = refine_cams_with_bkg_v2(par, inputs_denorm, cams=cams, cls_labels=cls_labels, cfg=cfg, img_box=img_box)
 
         aff_label = cams_to_affinity_label(refined_pseudo_label, mask=attn_mask, ignore_index=cfg.dataset.ignore_index)

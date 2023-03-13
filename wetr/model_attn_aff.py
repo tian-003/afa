@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .segformer_head import SegFormerHead
-from . import mix_transformer
+from segformer_head import SegFormerHead
+import mix_transformer
 import numpy as np
 
 
@@ -66,7 +66,7 @@ class WeTr(nn.Module):
 
         _x, _attns = self.encoder(x)
         _x1, _x2, _x3, _x4 = _x
-
+        
         seg = self.decoder(_x)
         #seg = self.decoder(_x4)
 
@@ -92,7 +92,7 @@ class WeTr(nn.Module):
 if __name__=="__main__":
 
     pretrained_weights = torch.load('pretrained/mit_b1.pth')
-    wetr = WeTr('mit_b1', num_classes=20, embedding_dim=256, pretrained=True)
+    wetr = WeTr('mit_b1', num_classes=20, embedding_dim=[32, 64, 160, 256], pretrained=False)
     wetr._param_groups()
     dummy_input = torch.rand(2,3,512,512)
     wetr(dummy_input)
